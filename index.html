@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Railo Runner - The Ultimate Running Game</title>
+    <title>Railo Runner - Play The Game</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,7 @@
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: #fff;
             overflow-x: hidden;
+            min-height: 100vh;
         }
         
         .container {
@@ -109,6 +110,9 @@
             font-weight: 600;
             transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
         }
         
         .btn:hover {
@@ -116,7 +120,7 @@
             box-shadow: 0 8px 20px rgba(233, 69, 96, 0.6);
         }
         
-        .game-preview {
+        .game-container {
             flex: 1;
             position: relative;
             height: 400px;
@@ -126,87 +130,49 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
         }
         
-        .runner-character {
-            position: absolute;
-            bottom: 50px;
-            left: 50px;
-            width: 120px;
-            height: 180px;
-            background: linear-gradient(45deg, #2d4059, #4a6484);
-            border-radius: 60px 60px 10px 10px;
-            animation: run 0.8s infinite steps(8);
-        }
-        
-        .runner-head {
-            position: absolute;
-            top: -30px;
-            left: 30px;
-            width: 60px;
-            height: 60px;
-            background: #ffcc99;
-            border-radius: 50%;
-        }
-        
-        .runner-torso {
-            position: absolute;
-            top: 30px;
-            left: 15px;
-            width: 90px;
-            height: 70px;
-            background: #e94560;
-            border-radius: 40px 40px 10px 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .runner-legs {
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            width: 100px;
-            height: 50px;
-        }
-        
-        .runner-leg {
-            position: absolute;
-            bottom: 0;
-            width: 20px;
-            height: 50px;
-            background: #2d4059;
-            border-radius: 10px 10px 0 0;
-        }
-        
-        .leg-left {
-            left: 20px;
-            animation: legMove 0.4s infinite alternate;
-        }
-        
-        .leg-right {
-            right: 20px;
-            animation: legMove 0.4s infinite alternate-reverse;
-        }
-        
-        .obstacle {
-            position: absolute;
-            bottom: 50px;
-            right: -50px;
-            width: 40px;
-            height: 60px;
-            background: #4ecdc4;
-            border-radius: 10px;
-            animation: obstacleMove 3s infinite linear;
-        }
-        
-        .ground {
-            position: absolute;
-            bottom: 0;
+        #game-canvas {
             width: 100%;
-            height: 50px;
-            background: #1a1a2e;
+            height: 100%;
+            display: block;
+        }
+        
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        
+        .score-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 52, 96, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 20;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-over h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #e94560;
+        }
+        
+        .game-over p {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
         
         .features {
@@ -322,22 +288,6 @@
             background: #e94560;
         }
         
-        @keyframes run {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-        
-        @keyframes legMove {
-            0% { height: 50px; }
-            100% { height: 30px; }
-        }
-        
-        @keyframes obstacleMove {
-            0% { right: -50px; }
-            100% { right: 100%; }
-        }
-        
         @media (max-width: 768px) {
             .hero {
                 flex-direction: column;
@@ -378,7 +328,7 @@
             <nav>
                 <ul>
                     <li><a href="#">Home</a></li>
-                    <li><a href="#">Play Game</a></li>
+                    <li><a href="#" id="play-game-link">Play Game</a></li>
                     <li><a href="#">Features</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
@@ -390,19 +340,18 @@
             <div class="hero-content">
                 <h2>Run with <span>Railo</span> in the Ultimate Endless Runner</h2>
                 <p>Dodge obstacles, collect coins, and achieve the highest score in this fast-paced running adventure. Featuring the iconic Running Man character with the Railo branding.</p>
-                <a href="#" class="btn">Play Now</a>
+                <button id="play-btn" class="btn">Play Now</button>
             </div>
-            <div class="game-preview">
-                <div class="runner-character">
-                    <div class="runner-head"></div>
-                    <div class="runner-torso">RAILO</div>
-                    <div class="runner-legs">
-                        <div class="runner-leg leg-left"></div>
-                        <div class="runner-leg leg-right"></div>
-                    </div>
+            <div class="game-container">
+                <canvas id="game-canvas"></canvas>
+                <div class="game-ui">
+                    <div class="score-display">Score: <span id="score">0</span></div>
                 </div>
-                <div class="obstacle"></div>
-                <div class="ground"></div>
+                <div class="game-over" id="game-over">
+                    <h2>Game Over!</h2>
+                    <p>Your Score: <span id="final-score">0</span></p>
+                    <button id="restart-btn" class="btn">Play Again</button>
+                </div>
             </div>
         </section>
         
@@ -417,7 +366,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🎮</div>
                     <h3>Simple Controls</h3>
-                    <p>Easy to learn, hard to master. Jump, slide, and dash with simple tap controls.</p>
+                    <p>Easy to learn, hard to master. Jump with a simple tap or click to avoid obstacles.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏆</div>
@@ -432,18 +381,18 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Tap to Jump</h3>
-                    <p>Tap the screen to make Railo jump over obstacles.</p>
+                    <h3>Click to Jump</h3>
+                    <p>Click anywhere or press SPACE to make Railo jump over obstacles.</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Collect Coins</h3>
-                    <p>Gather coins to increase your score and unlock new characters.</p>
+                    <h3>Avoid Obstacles</h3>
+                    <p>Dodge barriers and enemies to keep running as long as possible.</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Avoid Obstacles</h3>
-                    <p>Dodge barriers and enemies to keep running as long as possible.</p>
+                    <h3>Get High Score</h3>
+                    <p>Survive as long as you can to achieve the highest score possible.</p>
                 </div>
             </div>
         </section>
@@ -458,5 +407,270 @@
             <p>&copy; 2023 Railo Runner Game. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        // Game variables
+        let canvas, ctx;
+        let gameActive = false;
+        let score = 0;
+        let gameSpeed = 5;
+        let frames = 0;
+        
+        // Player properties
+        const player = {
+            x: 100,
+            y: 300,
+            width: 60,
+            height: 100,
+            velocityY: 0,
+            gravity: 0.8,
+            jumpStrength: -15,
+            grounded: true,
+            color: '#e94560'
+        };
+        
+        // Obstacles array
+        let obstacles = [];
+        
+        // Initialize game
+        function initGame() {
+            canvas = document.getElementById('game-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Reset game state
+            resetGame();
+            
+            // Start game loop
+            gameLoop();
+        }
+        
+        // Reset game to initial state
+        function resetGame() {
+            score = 0;
+            gameSpeed = 5;
+            frames = 0;
+            obstacles = [];
+            player.y = 300;
+            player.velocityY = 0;
+            player.grounded = true;
+            gameActive = true;
+            document.getElementById('game-over').style.display = 'none';
+            updateScore();
+        }
+        
+        // Game loop
+        function gameLoop() {
+            if (!gameActive) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background
+            drawBackground();
+            
+            // Update and draw player
+            updatePlayer();
+            drawPlayer();
+            
+            // Update and draw obstacles
+            updateObstacles();
+            drawObstacles();
+            
+            // Check collisions
+            checkCollisions();
+            
+            // Update score
+            updateScore();
+            
+            // Increase game speed over time
+            frames++;
+            if (frames % 300 === 0) {
+                gameSpeed += 0.5;
+            }
+            
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Draw game background
+        function drawBackground() {
+            // Draw gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0f3460');
+            gradient.addColorStop(1, '#1a1a2e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw ground
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+            
+            // Draw ground line
+            ctx.strokeStyle = '#e94560';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - 50);
+            ctx.lineTo(canvas.width, canvas.height - 50);
+            ctx.stroke();
+        }
+        
+        // Update player position and physics
+        function updatePlayer() {
+            // Apply gravity
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+            
+            // Ground collision
+            if (player.y > 300) {
+                player.y = 300;
+                player.velocityY = 0;
+                player.grounded = true;
+            }
+        }
+        
+        // Draw player character
+        function drawPlayer() {
+            // Draw body
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Draw "RAILO" text on torso
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('RAILO', player.x + player.width/2, player.y + player.height/2 + 5);
+            
+            // Draw head
+            ctx.fillStyle = '#ffcc99';
+            ctx.beginPath();
+            ctx.arc(player.x + player.width/2, player.y - 20, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw legs (running animation)
+            ctx.fillStyle = '#2d4059';
+            const legOffset = Math.sin(frames * 0.2) * 10;
+            ctx.fillRect(player.x + 10, player.y + player.height, 15, 30 + legOffset);
+            ctx.fillRect(player.x + player.width - 25, player.y + player.height, 15, 30 - legOffset);
+        }
+        
+        // Update obstacles
+        function updateObstacles() {
+            // Add new obstacles
+            if (frames % 120 === 0) {
+                const obstacle = {
+                    x: canvas.width,
+                    y: 320,
+                    width: 30,
+                    height: 30,
+                    color: '#4ecdc4'
+                };
+                obstacles.push(obstacle);
+            }
+            
+            // Move and remove obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= gameSpeed;
+                
+                // Remove obstacles that are off screen
+                if (obstacles[i].x + obstacles[i].width < 0) {
+                    obstacles.splice(i, 1);
+                    score += 5;
+                }
+            }
+        }
+        
+        // Draw obstacles
+        function drawObstacles() {
+            for (let i = 0; i < obstacles.length; i++) {
+                ctx.fillStyle = obstacles[i].color;
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+                
+                // Add some detail to obstacles
+                ctx.fillStyle = '#2d4059';
+                ctx.fillRect(obstacles[i].x + 5, obstacles[i].y + 5, obstacles[i].width - 10, obstacles[i].height - 10);
+            }
+        }
+        
+        // Check for collisions
+        function checkCollisions() {
+            for (let i = 0; i < obstacles.length; i++) {
+                const obstacle = obstacles[i];
+                
+                // Simple AABB collision detection
+                if (player.x < obstacle.x + obstacle.width &&
+                    player.x + player.width > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.height > obstacle.y) {
+                    
+                    // Collision detected - game over
+                    gameOver();
+                    return;
+                }
+            }
+        }
+        
+        // Game over function
+        function gameOver() {
+            gameActive = false;
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('game-over').style.display = 'block';
+        }
+        
+        // Update score display
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+        
+        // Jump function
+        function jump() {
+            if (player.grounded && gameActive) {
+                player.velocityY = player.jumpStrength;
+                player.grounded = false;
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('play-btn').addEventListener('click', function() {
+            if (!gameActive) {
+                resetGame();
+                gameLoop();
+            }
+        });
+        
+        document.getElementById('restart-btn').addEventListener('click', function() {
+            resetGame();
+            gameLoop();
+        });
+        
+        document.getElementById('play-game-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('play-btn').click();
+        });
+        
+        // Jump on spacebar or click
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                jump();
+                e.preventDefault();
+            }
+        });
+        
+        document.addEventListener('click', function() {
+            jump();
+        });
+        
+        // Initialize game when page loads
+        window.addEventListener('load', initGame);
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+    </script>
 </body>
 </html>

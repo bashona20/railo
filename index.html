@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Railo Runner - Play The Game</title>
+    <title>Rialo Runner - Full Screen Game</title>
     <style>
         * {
             margin: 0;
@@ -13,10 +13,10 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0c0c1e, #1a1a3e);
             color: #fff;
-            overflow-x: hidden;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
         .container {
@@ -30,52 +30,97 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            border-bottom: 2px solid #0f3460;
+            position: relative;
+            z-index: 10;
         }
         
         .logo {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
         
-        .logo img {
-            height: 50px;
-            margin-right: 15px;
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #ff6b6b, #e94560);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-img img {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
         }
         
         .logo h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(45deg, #e94560, #ff6b6b);
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #e94560, #4ecdc4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .logo p {
+            font-size: 14px;
+            color: #b8b8b8;
+            letter-spacing: 2px;
         }
         
         nav ul {
             display: flex;
             list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 30px;
+            gap: 30px;
         }
         
         nav ul li a {
             color: #fff;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(45deg, #e94560, #4ecdc4);
+            transition: width 0.3s;
         }
         
         nav ul li a:hover {
             color: #e94560;
         }
         
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
         .hero {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 80px 0;
+            padding: 60px 0;
+            position: relative;
+            z-index: 5;
         }
         
         .hero-content {
@@ -84,13 +129,13 @@
         }
         
         .hero-content h2 {
-            font-size: 48px;
+            font-size: 52px;
             margin-bottom: 20px;
             line-height: 1.2;
-        }
-        
-        .hero-content h2 span {
-            color: #e94560;
+            background: linear-gradient(45deg, #fff, #e94560, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .hero-content p {
@@ -98,36 +143,253 @@
             line-height: 1.6;
             margin-bottom: 30px;
             color: #b8b8b8;
+            max-width: 500px;
         }
         
         .btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: linear-gradient(45deg, #e94560, #ff6b6b);
             color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
+            padding: 15px 35px;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
+            font-size: 18px;
+            transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
             border: none;
             cursor: pointer;
-            font-size: 16px;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(233, 69, 96, 0.6);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #4ecdc4, #06d6a0);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.6);
         }
         
         .game-container {
             flex: 1;
             position: relative;
-            height: 400px;
-            background: linear-gradient(135deg, #0f3460, #1a1a2e);
-            border-radius: 20px;
+            height: 500px;
+            background: linear-gradient(145deg, #0f1730, #1a1a3e);
+            border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-scene {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #1a1a3e 0%, #0f1730 30%, #0c0c1e 100%);
+        }
+        
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, #0c0c1e, #1a1a3e);
+            clip-path: polygon(0 100%, 100% 100%, 100% 30%, 80% 40%, 60% 20%, 40% 50%, 20% 10%, 0 40%);
+        }
+        
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to top, #0c0c1e, #1a1a3e);
+        }
+        
+        .runner {
+            position: absolute;
+            bottom: 20%;
+            left: 20%;
+            width: 80px;
+            height: 150px;
+            z-index: 10;
+            animation: run 0.8s infinite steps(8);
+        }
+        
+        .runner-body {
+            position: absolute;
+            width: 60px;
+            height: 100px;
+            background: linear-gradient(45deg, #2d4059, #4a6484);
+            border-radius: 30px 30px 10px 10px;
+            left: 10px;
+            top: 20px;
+        }
+        
+        .runner-head {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ffcc99;
+            border-radius: 50%;
+            left: 15px;
+            top: -20px;
+        }
+        
+        .runner-shirt {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #e94560;
+            border-radius: 20px 20px 5px 5px;
+            left: 15px;
+            top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+        }
+        
+        .runner-legs {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 60px;
+            height: 50px;
+        }
+        
+        .runner-leg {
+            position: absolute;
+            bottom: 0;
+            width: 15px;
+            height: 50px;
+            background: #2d4059;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .leg-left {
+            left: 10px;
+            animation: legMove 0.4s infinite alternate;
+        }
+        
+        .leg-right {
+            right: 10px;
+            animation: legMove 0.4s infinite alternate-reverse;
+        }
+        
+        .obstacles {
+            position: absolute;
+            bottom: 20%;
+            right: -50px;
+            width: 40px;
+            height: 60px;
+            background: #4ecdc4;
+            border-radius: 10px;
+            animation: obstacleMove 4s infinite linear;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.7);
+        }
+        
+        .coins {
+            position: absolute;
+            bottom: 50%;
+            right: -30px;
+            width: 30px;
+            height: 30px;
+            background: #ffd166;
+            border-radius: 50%;
+            animation: coinMove 5s infinite linear;
+            box-shadow: 0 0 15px rgba(255, 209, 102, 0.7);
+        }
+        
+        .coins:before {
+            content: '$';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #b8860b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .floating-logos {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .floating-logo {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+        
+        .floating-logo:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-logo:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .floating-logo:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        .floating-logo:nth-child(4) {
+            bottom: 20%;
+            right: 25%;
+            animation-delay: 6s;
+        }
+        
+        .floating-logo:nth-child(5) {
+            top: 40%;
+            left: 30%;
+            animation-delay: 8s;
+        }
+        
+        /* Full Screen Game Styles */
+        #fullscreen-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #1a1a3e, #0c0c1e);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         #game-canvas {
@@ -141,13 +403,28 @@
             top: 20px;
             left: 20px;
             z-index: 10;
+            display: flex;
+            gap: 20px;
         }
         
-        .score-display {
+        .score-display, .lives-display {
             font-size: 24px;
             font-weight: bold;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+        
+        .game-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 10;
         }
         
         .game-over {
@@ -155,140 +432,95 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(15, 52, 96, 0.9);
-            padding: 30px;
-            border-radius: 15px;
+            background: rgba(15, 23, 48, 0.9);
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
             z-index: 20;
             display: none;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #e94560;
         }
         
         .game-over h2 {
-            font-size: 36px;
+            font-size: 48px;
             margin-bottom: 20px;
             color: #e94560;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         .game-over p {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            color: #fff;
         }
         
-        .features {
-            padding: 80px 0;
-            text-align: center;
-        }
-        
-        .section-title {
-            font-size: 36px;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-        
-        .section-title span {
-            color: #e94560;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .feature-card {
-            background: rgba(15, 52, 96, 0.3);
-            padding: 30px;
-            border-radius: 15px;
-            transition: transform 0.3s, background 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(15, 52, 96, 0.5);
-        }
-        
-        .feature-icon {
-            font-size: 40px;
-            margin-bottom: 20px;
-            color: #e94560;
-        }
-        
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
-        
-        .feature-card p {
-            color: #b8b8b8;
-            line-height: 1.6;
-        }
-        
-        .how-to-play {
-            padding: 80px 0;
-            background: rgba(15, 52, 96, 0.2);
-            border-radius: 20px;
-            margin: 40px 0;
-        }
-        
-        .steps {
-            display: flex;
+        .mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
             justify-content: space-between;
-            margin-top: 50px;
+            padding: 0 30px;
+            z-index: 10;
         }
         
-        .step {
-            text-align: center;
-            flex: 1;
-            padding: 0 20px;
-        }
-        
-        .step-number {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            background: #e94560;
+        .mobile-btn {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            line-height: 50px;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid #0f3460;
-            margin-top: 40px;
-            color: #b8b8b8;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .social-links a {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #0f3460;
-            border-radius: 50%;
-            margin: 0 10px;
+            background: rgba(233, 69, 96, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 30px;
             color: white;
-            text-decoration: none;
-            transition: background 0.3s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
-        .social-links a:hover {
-            background: #e94560;
+        .mobile-btn:active {
+            background: rgba(233, 69, 96, 1);
+            transform: scale(0.95);
         }
         
-        @media (max-width: 768px) {
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(233, 69, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0); }
+        }
+        
+        @keyframes run {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        @keyframes legMove {
+            0% { height: 50px; }
+            100% { height: 30px; }
+        }
+        
+        @keyframes obstacleMove {
+            0% { right: -50px; }
+            100% { right: 100%; }
+        }
+        
+        @keyframes coinMove {
+            0% { right: -30px; }
+            100% { right: 100%; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.2; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 0.1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
             .hero {
                 flex-direction: column;
                 padding: 40px 0;
@@ -301,19 +533,29 @@
             }
             
             .hero-content h2 {
-                font-size: 36px;
+                font-size: 42px;
             }
             
-            .steps {
-                flex-direction: column;
-            }
-            
-            .step {
-                margin-bottom: 30px;
+            .game-container {
+                width: 100%;
             }
             
             nav ul {
                 display: none;
+            }
+            
+            .mobile-controls {
+                display: flex;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 28px;
+            }
+            
+            .hero-content h2 {
+                font-size: 36px;
             }
         }
     </style>
@@ -322,97 +564,111 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Railo Logo">
-                <h1>RAILO RUNNER</h1>
+                <div class="logo-img">
+                    <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo Logo">
+                </div>
+                <div class="logo-text">
+                    <h1>RIALO RUNNER</h1>
+                    <p>THE ULTIMATE RUNNING EXPERIENCE</p>
+                </div>
             </div>
             <nav>
                 <ul>
                     <li><a href="#">Home</a></li>
-                    <li><a href="#" id="play-game-link">Play Game</a></li>
+                    <li><a href="#">Gameplay</a></li>
                     <li><a href="#">Features</a></li>
+                    <li><a href="#">Leaderboard</a></li>
                     <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
                 </ul>
             </nav>
         </header>
         
         <section class="hero">
             <div class="hero-content">
-                <h2>Run with <span>Railo</span> in the Ultimate Endless Runner</h2>
-                <p>Dodge obstacles, collect coins, and achieve the highest score in this fast-paced running adventure. Featuring the iconic Running Man character with the Railo branding.</p>
-                <button id="play-btn" class="btn">Play Now</button>
+                <h2>Run with Rialo in the Ultimate Endless Runner</h2>
+                <p>Experience the thrill of high-speed running in a stunning visual environment. Dodge obstacles, collect coins, and compete for the highest score in this adrenaline-pumping adventure.</p>
+                <div class="btn-group">
+                    <button id="play-btn" class="btn"><i class="fas fa-play"></i> Play Now</button>
+                    <button class="btn btn-secondary"><i class="fas fa-trophy"></i> View Leaderboard</button>
+                </div>
             </div>
             <div class="game-container">
-                <canvas id="game-canvas"></canvas>
-                <div class="game-ui">
-                    <div class="score-display">Score: <span id="score">0</span></div>
-                </div>
-                <div class="game-over" id="game-over">
-                    <h2>Game Over!</h2>
-                    <p>Your Score: <span id="final-score">0</span></p>
-                    <button id="restart-btn" class="btn">Play Again</button>
-                </div>
-            </div>
-        </section>
-        
-        <section class="features">
-            <h2 class="section-title">Game <span>Features</span></h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Fast-Paced Action</h3>
-                    <p>Experience adrenaline-pumping gameplay with increasing speed and challenging obstacles.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎮</div>
-                    <h3>Simple Controls</h3>
-                    <p>Easy to learn, hard to master. Jump with a simple tap or click to avoid obstacles.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Leaderboards</h3>
-                    <p>Compete with players worldwide and climb the global leaderboards.</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="how-to-play">
-            <h2 class="section-title">How To <span>Play</span></h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Click to Jump</h3>
-                    <p>Click anywhere or press SPACE to make Railo jump over obstacles.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Avoid Obstacles</h3>
-                    <p>Dodge barriers and enemies to keep running as long as possible.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Get High Score</h3>
-                    <p>Survive as long as you can to achieve the highest score possible.</p>
+                <div class="game-scene">
+                    <div class="background"></div>
+                    <div class="mountain"></div>
+                    <div class="ground"></div>
+                    
+                    <div class="floating-logos">
+                        <div class="floating-logo">
+                            <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo">
+                        </div>
+                        <div class="floating-logo">
+                            <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo">
+                        </div>
+                        <div class="floating-logo">
+                            <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo">
+                        </div>
+                        <div class="floating-logo">
+                            <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo">
+                        </div>
+                        <div class="floating-logo">
+                            <img src="https://img.cryptorank.io/coins/rialo1754294268891.png" alt="Rialo">
+                        </div>
+                    </div>
+                    
+                    <div class="runner">
+                        <div class="runner-head"></div>
+                        <div class="runner-body"></div>
+                        <div class="runner-shirt">RIALO</div>
+                        <div class="runner-legs">
+                            <div class="runner-leg leg-left"></div>
+                            <div class="runner-leg leg-right"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="obstacles"></div>
+                    <div class="coins"></div>
                 </div>
             </div>
         </section>
+    </div>
+
+    <!-- Full Screen Game -->
+    <div id="fullscreen-game">
+        <canvas id="game-canvas"></canvas>
         
-        <footer>
-            <div class="social-links">
-                <a href="#">FB</a>
-                <a href="#">TW</a>
-                <a href="#">IG</a>
-                <a href="#">YT</a>
+        <div class="game-ui">
+            <div class="score-display">Score: <span id="score">0</span></div>
+            <div class="lives-display">Lives: <span id="lives">3</span></div>
+        </div>
+        
+        <div class="game-controls">
+            <button id="pause-btn" class="btn"><i class="fas fa-pause"></i> Pause</button>
+            <button id="exit-btn" class="btn btn-secondary"><i class="fas fa-times"></i> Exit</button>
+        </div>
+        
+        <div class="mobile-controls">
+            <div class="mobile-btn" id="jump-btn">↑</div>
+            <div class="mobile-btn" id="slide-btn">↓</div>
+        </div>
+        
+        <div class="game-over" id="game-over">
+            <h2>Game Over!</h2>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button id="restart-btn" class="btn"><i class="fas fa-redo"></i> Play Again</button>
+                <button id="menu-btn" class="btn btn-secondary"><i class="fas fa-home"></i> Main Menu</button>
             </div>
-            <p>&copy; 2023 Railo Runner Game. All rights reserved.</p>
-        </footer>
+        </div>
     </div>
 
     <script>
         // Game variables
         let canvas, ctx;
         let gameActive = false;
+        let gamePaused = false;
         let score = 0;
+        let lives = 3;
         let gameSpeed = 5;
         let frames = 0;
         
@@ -426,45 +682,61 @@
             gravity: 0.8,
             jumpStrength: -15,
             grounded: true,
-            color: '#e94560'
+            sliding: false,
+            slideTimer: 0
         };
         
         // Obstacles array
         let obstacles = [];
+        let coins = [];
         
         // Initialize game
         function initGame() {
             canvas = document.getElementById('game-canvas');
             ctx = canvas.getContext('2d');
             
-            // Set canvas dimensions
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            // Set canvas dimensions to full screen
+            resizeCanvas();
             
             // Reset game state
             resetGame();
             
             // Start game loop
             gameLoop();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        // Resize canvas to full screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
         
         // Reset game to initial state
         function resetGame() {
             score = 0;
+            lives = 3;
             gameSpeed = 5;
             frames = 0;
             obstacles = [];
+            coins = [];
+            player.x = 100;
             player.y = 300;
             player.velocityY = 0;
             player.grounded = true;
+            player.sliding = false;
             gameActive = true;
+            gamePaused = false;
+            
             document.getElementById('game-over').style.display = 'none';
-            updateScore();
+            updateUI();
         }
         
         // Game loop
         function gameLoop() {
-            if (!gameActive) return;
+            if (!gameActive || gamePaused) return;
             
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -480,11 +752,15 @@
             updateObstacles();
             drawObstacles();
             
+            // Update and draw coins
+            updateCoins();
+            drawCoins();
+            
             // Check collisions
             checkCollisions();
             
-            // Update score
-            updateScore();
+            // Update score and UI
+            updateUI();
             
             // Increase game speed over time
             frames++;
@@ -500,22 +776,30 @@
         function drawBackground() {
             // Draw gradient background
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, '#0f3460');
-            gradient.addColorStop(1, '#1a1a2e');
+            gradient.addColorStop(0, '#1a1a3e');
+            gradient.addColorStop(1, '#0c0c1e');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             // Draw ground
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+            ctx.fillStyle = '#0c0c1e';
+            ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
             
             // Draw ground line
             ctx.strokeStyle = '#e94560';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(0, canvas.height - 50);
-            ctx.lineTo(canvas.width, canvas.height - 50);
+            ctx.moveTo(0, canvas.height - 100);
+            ctx.lineTo(canvas.width, canvas.height - 100);
             ctx.stroke();
+            
+            // Draw Rialo logo in background (subtle)
+            ctx.globalAlpha = 0.05;
+            ctx.fillStyle = '#e94560';
+            ctx.font = 'bold 150px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('RIALO', canvas.width / 2, canvas.height / 2);
+            ctx.globalAlpha = 1.0;
         }
         
         // Update player position and physics
@@ -525,24 +809,44 @@
             player.y += player.velocityY;
             
             // Ground collision
-            if (player.y > 300) {
-                player.y = 300;
+            if (player.y > canvas.height - 100 - player.height) {
+                player.y = canvas.height - 100 - player.height;
                 player.velocityY = 0;
                 player.grounded = true;
+            }
+            
+            // Handle sliding
+            if (player.sliding) {
+                player.slideTimer++;
+                if (player.slideTimer > 30) { // Slide for 30 frames
+                    player.sliding = false;
+                    player.height = 100;
+                    player.y -= 40; // Adjust position after sliding
+                }
             }
         }
         
         // Draw player character
         function drawPlayer() {
             // Draw body
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.fillStyle = '#2d4059';
+            if (player.sliding) {
+                // Sliding position
+                ctx.fillRect(player.x, player.y + 40, player.width, 60);
+            } else {
+                // Normal running position
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
             
-            // Draw "RAILO" text on torso
-            ctx.fillStyle = 'white';
+            // Draw "RIALO" text on torso
+            ctx.fillStyle = '#e94560';
             ctx.font = 'bold 14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('RAILO', player.x + player.width/2, player.y + player.height/2 + 5);
+            if (player.sliding) {
+                ctx.fillText('RIALO', player.x + player.width/2, player.y + 70);
+            } else {
+                ctx.fillText('RIALO', player.x + player.width/2, player.y + player.height/2 + 5);
+            }
             
             // Draw head
             ctx.fillStyle = '#ffcc99';
@@ -551,22 +855,27 @@
             ctx.fill();
             
             // Draw legs (running animation)
-            ctx.fillStyle = '#2d4059';
-            const legOffset = Math.sin(frames * 0.2) * 10;
-            ctx.fillRect(player.x + 10, player.y + player.height, 15, 30 + legOffset);
-            ctx.fillRect(player.x + player.width - 25, player.y + player.height, 15, 30 - legOffset);
+            ctx.fillStyle = '#1a1a3e';
+            if (!player.sliding) {
+                const legOffset = Math.sin(frames * 0.2) * 10;
+                ctx.fillRect(player.x + 10, player.y + player.height, 15, 30 + legOffset);
+                ctx.fillRect(player.x + player.width - 25, player.y + player.height, 15, 30 - legOffset);
+            }
         }
         
         // Update obstacles
         function updateObstacles() {
             // Add new obstacles
             if (frames % 120 === 0) {
+                const obstacleType = Math.random() > 0.7 ? 'high' : 'low';
+                const height = obstacleType === 'high' ? 80 : 40;
+                
                 const obstacle = {
                     x: canvas.width,
-                    y: 320,
+                    y: canvas.height - 100 - height,
                     width: 30,
-                    height: 30,
-                    color: '#4ecdc4'
+                    height: height,
+                    type: obstacleType
                 };
                 obstacles.push(obstacle);
             }
@@ -578,25 +887,71 @@
                 // Remove obstacles that are off screen
                 if (obstacles[i].x + obstacles[i].width < 0) {
                     obstacles.splice(i, 1);
-                    score += 5;
                 }
             }
         }
         
         // Draw obstacles
         function drawObstacles() {
-            for (let i = 0; i < obstacles.length; i++) {
-                ctx.fillStyle = obstacles[i].color;
-                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = obstacle.type === 'high' ? '#4ecdc4' : '#ff6b6b';
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 
                 // Add some detail to obstacles
-                ctx.fillStyle = '#2d4059';
-                ctx.fillRect(obstacles[i].x + 5, obstacles[i].y + 5, obstacles[i].width - 10, obstacles[i].height - 10);
+                ctx.fillStyle = '#1a1a3e';
+                ctx.fillRect(obstacle.x + 5, obstacle.y + 5, obstacle.width - 10, obstacle.height - 10);
+            });
+        }
+        
+        // Update coins
+        function updateCoins() {
+            // Add new coins
+            if (frames % 90 === 0) {
+                const coin = {
+                    x: canvas.width,
+                    y: canvas.height - 200,
+                    radius: 15
+                };
+                coins.push(coin);
             }
+            
+            // Move and remove coins
+            for (let i = coins.length - 1; i >= 0; i--) {
+                coins[i].x -= gameSpeed;
+                
+                // Remove coins that are off screen
+                if (coins[i].x + coins[i].radius < 0) {
+                    coins.splice(i, 1);
+                }
+            }
+        }
+        
+        // Draw coins
+        function drawCoins() {
+            coins.forEach(coin => {
+                // Coin body
+                ctx.fillStyle = '#ffd166';
+                ctx.beginPath();
+                ctx.arc(coin.x, coin.y, coin.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Coin shine
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.beginPath();
+                ctx.arc(coin.x - coin.radius/3, coin.y - coin.radius/3, coin.radius/3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Coin symbol
+                ctx.fillStyle = '#b8860b';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('$', coin.x, coin.y + 5);
+            });
         }
         
         // Check for collisions
         function checkCollisions() {
+            // Check obstacle collisions
             for (let i = 0; i < obstacles.length; i++) {
                 const obstacle = obstacles[i];
                 
@@ -606,8 +961,30 @@
                     player.y < obstacle.y + obstacle.height &&
                     player.y + player.height > obstacle.y) {
                     
-                    // Collision detected - game over
-                    gameOver();
+                    // Collision detected - lose life
+                    lives--;
+                    obstacles.splice(i, 1);
+                    updateUI();
+                    
+                    if (lives <= 0) {
+                        gameOver();
+                    }
+                    return;
+                }
+            }
+            
+            // Check coin collisions
+            for (let i = 0; i < coins.length; i++) {
+                const coin = coins[i];
+                const dx = player.x + player.width/2 - coin.x;
+                const dy = player.y + player.height/2 - coin.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < player.width/2 + coin.radius) {
+                    // Coin collected
+                    coins.splice(i, 1);
+                    score += 10;
+                    updateUI();
                     return;
                 }
             }
@@ -620,57 +997,105 @@
             document.getElementById('game-over').style.display = 'block';
         }
         
-        // Update score display
-        function updateScore() {
+        // Update UI elements
+        function updateUI() {
             document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
         }
         
         // Jump function
         function jump() {
-            if (player.grounded && gameActive) {
+            if (player.grounded && gameActive && !gamePaused) {
                 player.velocityY = player.jumpStrength;
                 player.grounded = false;
             }
         }
         
-        // Event listeners
-        document.getElementById('play-btn').addEventListener('click', function() {
-            if (!gameActive) {
-                resetGame();
-                gameLoop();
+        // Slide function
+        function slide() {
+            if (player.grounded && gameActive && !gamePaused && !player.sliding) {
+                player.sliding = true;
+                player.slideTimer = 0;
+                player.height = 60;
             }
-        });
+        }
         
-        document.getElementById('restart-btn').addEventListener('click', function() {
+        // Set up event listeners
+        function setupEventListeners() {
+            // Jump on spacebar or up arrow
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    jump();
+                    e.preventDefault();
+                }
+                
+                // Slide on down arrow
+                if (e.code === 'ArrowDown') {
+                    slide();
+                    e.preventDefault();
+                }
+                
+                // Pause on P key
+                if (e.code === 'KeyP') {
+                    togglePause();
+                }
+            });
+            
+            // Mobile controls
+            document.getElementById('jump-btn').addEventListener('click', jump);
+            document.getElementById('slide-btn').addEventListener('click', slide);
+            
+            // Game control buttons
+            document.getElementById('pause-btn').addEventListener('click', togglePause);
+            document.getElementById('exit-btn').addEventListener('click', exitGame);
+            document.getElementById('restart-btn').addEventListener('click', restartGame);
+            document.getElementById('menu-btn').addEventListener('click', exitGame);
+            
+            // Window resize
+            window.addEventListener('resize', () => {
+                if (document.getElementById('fullscreen-game').style.display === 'flex') {
+                    resizeCanvas();
+                }
+            });
+        }
+        
+        // Toggle pause state
+        function togglePause() {
+            if (gameActive) {
+                gamePaused = !gamePaused;
+                document.getElementById('pause-btn').innerHTML = gamePaused ? 
+                    '<i class="fas fa-play"></i> Resume' : '<i class="fas fa-pause"></i> Pause';
+                
+                if (!gamePaused) {
+                    gameLoop();
+                }
+            }
+        }
+        
+        // Exit game and return to main menu
+        function exitGame() {
+            document.getElementById('fullscreen-game').style.display = 'none';
+            gameActive = false;
+        }
+        
+        // Restart game
+        function restartGame() {
             resetGame();
+            document.getElementById('game-over').style.display = 'none';
             gameLoop();
+        }
+        
+        // Play button click handler
+        document.getElementById('play-btn').addEventListener('click', function() {
+            document.getElementById('fullscreen-game').style.display = 'flex';
+            initGame();
         });
         
-        document.getElementById('play-game-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('play-btn').click();
-        });
-        
-        // Jump on spacebar or click
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space') {
-                jump();
-                e.preventDefault();
-            }
-        });
-        
-        document.addEventListener('click', function() {
-            jump();
-        });
-        
-        // Initialize game when page loads
-        window.addEventListener('load', initGame);
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        });
+        // Add Font Awesome for icons
+        const fontAwesome = document.createElement('link');
+        fontAwesome.rel = 'stylesheet';
+        fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+        document.head.appendChild(fontAwesome);
     </script>
 </body>
 </html>
